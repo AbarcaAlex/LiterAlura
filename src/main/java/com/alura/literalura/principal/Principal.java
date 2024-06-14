@@ -1,11 +1,20 @@
 package com.alura.literalura.principal;
 
+import java.util.List;
 import java.util.Scanner;
+// import java.util.stream.Collectors;
 
+import com.alura.literalura.model.DatosBusqueda;
+import com.alura.literalura.model.DatosLibro;
+// import com.alura.literalura.model.Libro;
 import com.alura.literalura.service.ConsumoApi;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Principal {
     private static Scanner scanner = new Scanner(System.in);
+    private static ObjectMapper objectMapper = new ObjectMapper();
 
     public static int mostrarMenu(){
         
@@ -39,7 +48,7 @@ public class Principal {
         return menu;
     }
 
-    public static void lanzarAplicacion(){
+    public static void lanzarAplicacion() throws JsonMappingException, JsonProcessingException{
         int salir = 1;
         int opcionMenu;
 
@@ -73,24 +82,27 @@ public class Principal {
         }
     }
 
-    public static void buscarLibroPorTitulo(){
+    public static void buscarLibroPorTitulo() throws JsonMappingException, JsonProcessingException{
         
         System.out.println("Escriba el titulo del libro que desea buscar:");
         String titulo = scanner.next();
 
         String url = "https://gutendex.com/books/?search="+titulo.toLowerCase().replace(" ", "%20");
         String json = ConsumoApi.obtenerDatos(url);
-        System.out.println(json);
-        // var data = ConvierteDatos.obtenerDatos(json, DatosBusqueda.class);
-        // List<DatosLibro> libros = data.results();
-        // if (libros.isEmpty()) {
-        //     System.out.println("No se encontro ningun libro");
-        // }else{
-        //     libros.stream()
-        //         .limit(1)
-        //         .forEach(System.out::println);
-        // }
-            
+
+        DatosBusqueda data = objectMapper.readValue(json, DatosBusqueda.class);
+
+        List<DatosLibro> libros = data.resultados();
+        if (libros.isEmpty()) {
+            System.out.println("No se encontro ningun libro");
+        }else{
+            libros.stream()
+                .limit(1)
+                // .map(l -> new Libro(l))
+                // .collect(Collectors.toList())
+                .forEach(System.out::println);
+        }
+        
     }
 
     

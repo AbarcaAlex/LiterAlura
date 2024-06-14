@@ -1,6 +1,4 @@
-// package com.alura.literalura.entity;
-
-// import com.alura.literalura.model.DatosAutor;
+// package com.alura.literalura.model;
 
 // import jakarta.persistence.Entity;
 // import jakarta.persistence.GeneratedValue;
@@ -11,7 +9,7 @@
 
 // @Entity
 // @Table(name = "autor")
-// public class AutorEntity {
+// public class Autor {
 
 //     @Id
 //     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +19,9 @@
 //     private int birth_year;
 //     private int death_year;
 
-//     public AutorEntity(){}
+//     public Autor(){}
 
-//     public AutorEntity(DatosAutor da){
+//     public Autor(DatosAutor da){
 //         this.name = da.nombre();
 //         this.birth_year = da.anio_nacimiento();
 //         this.death_year = da.anio_fallecimiento();

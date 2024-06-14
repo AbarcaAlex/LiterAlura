@@ -1,9 +1,7 @@
-// package com.alura.literalura.entity;
+// package com.alura.literalura.model;
 
 // import java.util.List;
 // import java.util.stream.Collectors;
-
-// import com.alura.literalura.model.DatosLibro;
 
 // import jakarta.persistence.CascadeType;
 // import jakarta.persistence.Entity;
@@ -14,22 +12,22 @@
 
 // @Entity
 // @Table(name = "libro")
-// public class LibroEntity {
+// public class Libro {
 
 //     @Id
 //     private long id;
 //     private String title;
 //     @OneToMany(mappedBy = "id_author", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//     private List<AutorEntity> authors;
-//     private String languages;
+//     private List<Autor> authors;
+//     private List<String> languages;
 //     private int download_count;
 
-//     public LibroEntity(){}
+//     public Libro(){}
 
-//     public LibroEntity(DatosLibro dl){
+//     public Libro(DatosLibro dl){
 //         this.id = dl.id();
 //         this.title = dl.titulo();
-//         this.authors = dl.autores().stream().map(a -> new AutorEntity(a)).collect(Collectors.toList());
+//         this.authors = dl.autores().stream().map(a -> new Autor(a)).collect(Collectors.toList());
 //         this.languages = dl.lenguajes();
 //         this.download_count = dl.descargas();
 //     }
@@ -50,19 +48,19 @@
 //         this.title = title;
 //     }
 
-//     public List<AutorEntity> getAuthors() {
+//     public List<Autor> getAuthors() {
 //         return authors;
 //     }
 
-//     public void setAuthors(List<AutorEntity> authors) {
+//     public void setAuthors(List<Autor> authors) {
 //         this.authors = authors;
 //     }
 
-//     public String getLanguages() {
+//     public List<String> getLanguages() {
 //         return languages;
 //     }
 
-//     public void setLanguages(String languages) {
+//     public void setLanguages(List<String> languages) {
 //         this.languages = languages;
 //     }
 
@@ -76,7 +74,7 @@
 
 //     @Override
 //     public String toString() {
-//         return "LibroEntity [id=" + id + ", title=" + title + ", authors=" + authors + ", languages=" + languages
+//         return "Libro [id=" + id + ", title=" + title + ", authors=" + authors + ", languages=" + languages
 //                 + ", download_count=" + download_count + "]";
 //     }
 
