@@ -1,82 +1,94 @@
-// package com.alura.literalura.model;
+package com.alura.literalura.model;
 
-// import java.util.List;
-// import java.util.stream.Collectors;
+import java.util.List;
 
-// import jakarta.persistence.CascadeType;
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.FetchType;
-// import jakarta.persistence.Id;
-// import jakarta.persistence.OneToMany;
-// import jakarta.persistence.Table;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
-// @Entity
-// @Table(name = "libro")
-// public class Libro {
+@Entity
+@Table(name = "libro")
+public class Libro {
 
-//     @Id
-//     private long id;
-//     private String title;
-//     @OneToMany(mappedBy = "id_author", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//     private List<Autor> authors;
-//     private List<String> languages;
-//     private int download_count;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true)
+    private long id;
 
-//     public Libro(){}
+    @Column(name = "titulo")
+    private String title;
+    
+    @OneToMany(mappedBy = "id_author")
+    private List<Autor> authors;
 
-//     public Libro(DatosLibro dl){
-//         this.id = dl.id();
-//         this.title = dl.titulo();
-//         this.authors = dl.autores().stream().map(a -> new Autor(a)).collect(Collectors.toList());
-//         this.languages = dl.lenguajes();
-//         this.download_count = dl.descargas();
-//     }
+    @ElementCollection
+    @CollectionTable(name = "idioma_libro")
+    @Column(name = "idioma")
+    private List<String> languages;
 
-//     public long getId() {
-//         return id;
-//     }
+    @Column(name = "descargas")
+    private int download_count;
 
-//     public void setId(long id) {
-//         this.id = id;
-//     }
+    public Libro(){}
 
-//     public String getTitle() {
-//         return title;
-//     }
+    public Libro(DatosLibro dl){
+        this.title = dl.titulo();
+        this.languages = dl.idiomas();
+        this.download_count = dl.descargas();
+    }
 
-//     public void setTitle(String title) {
-//         this.title = title;
-//     }
+    public long getId() {
+        return id;
+    }
 
-//     public List<Autor> getAuthors() {
-//         return authors;
-//     }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-//     public void setAuthors(List<Autor> authors) {
-//         this.authors = authors;
-//     }
+    public String getTitle() {
+        return title;
+    }
 
-//     public List<String> getLanguages() {
-//         return languages;
-//     }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-//     public void setLanguages(List<String> languages) {
-//         this.languages = languages;
-//     }
+    public List<Autor> getAuthors() {
+        return authors;
+    }
 
-//     public int getDownload_count() {
-//         return download_count;
-//     }
+    public void setAuthors(List<Autor> authors) {
+        authors.forEach(a -> a.setLibro(this));
+        this.authors = authors;
+    }
 
-//     public void setDownload_count(int download_count) {
-//         this.download_count = download_count;
-//     }
+    public List<String> getLanguages() {
+        return languages;
+    }
 
-//     @Override
-//     public String toString() {
-//         return "Libro [id=" + id + ", title=" + title + ", authors=" + authors + ", languages=" + languages
-//                 + ", download_count=" + download_count + "]";
-//     }
+    public void setLanguages(List<String> languages) {
+        this.languages = languages;
+    }
+
+    public int getDownload_count() {
+        return download_count;
+    }
+
+    public void setDownload_count(int download_count) {
+        this.download_count = download_count;
+    }
+
+    @Override
+    public String toString() {
+        return "\nTitulo: " + title + "\nAutores=" + authors + "\nLenguajes: " + languages
+                + "\nDescargas: " + download_count + "\n";
+    }
 
     
-// }
+}

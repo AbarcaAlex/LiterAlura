@@ -1,69 +1,88 @@
-// package com.alura.literalura.model;
+package com.alura.literalura.model;
 
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.Id;
-// import jakarta.persistence.ManyToOne;
-// import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
-// @Entity
-// @Table(name = "autor")
-// public class Autor {
+@Entity
+@Table(name = "autor")
+public class Autor {
 
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     @ManyToOne
-//     private long id_author;
-//     private String name;
-//     private int birth_year;
-//     private int death_year;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true)
+    private long id_author;
 
-//     public Autor(){}
+    @Column(name = "nombre")
+    private String name;
 
-//     public Autor(DatosAutor da){
-//         this.name = da.nombre();
-//         this.birth_year = da.anio_nacimiento();
-//         this.death_year = da.anio_fallecimiento();
-//     }
+    @Column(name = "anioNacimiento")
+    private int birth_year;
 
-//     public long getId_author() {
-//         return id_author;
-//     }
+    @Column(name = "anioFallecimiento")
+    private int death_year;
 
-//     public void setId_author(long id_author) {
-//         this.id_author = id_author;
-//     }
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id")
+    private Libro libro;
 
-//     public String getName() {
-//         return name;
-//     }
+    public Autor(){}
 
-//     public void setName(String name) {
-//         this.name = name;
-//     }
+    public Autor(DatosAutor da){
+        this.name = da.nombre();
+        this.birth_year = da.anio_nacimiento();
+        this.death_year = da.anio_fallecimiento();
+    }
 
-//     public int getBirth_year() {
-//         return birth_year;
-//     }
+    public long getId_author() {
+        return id_author;
+    }
 
-//     public void setBirth_year(int birth_year) {
-//         this.birth_year = birth_year;
-//     }
+    public void setId_author(long id_author) {
+        this.id_author = id_author;
+    }
 
-//     public int getDeath_year() {
-//         return death_year;
-//     }
+    public String getName() {
+        return name;
+    }
 
-//     public void setDeath_year(int death_year) {
-//         this.death_year = death_year;
-//     }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-//     @Override
-//     public String toString() {
-//         return "AutorEntity [id_author=" + id_author + ", name=" + name + ", birth_year=" + birth_year + ", death_year="
-//                 + death_year + "]";
-//     }
+    public int getBirth_year() {
+        return birth_year;
+    }
 
+    public void setBirth_year(int birth_year) {
+        this.birth_year = birth_year;
+    }
+
+    public int getDeath_year() {
+        return death_year;
+    }
+
+    public void setDeath_year(int death_year) {
+        this.death_year = death_year;
+    }
+
+    public Libro getLibro() {
+        return libro;
+    }
+
+    public void setLibro(Libro libro) {
+        this.libro = libro;
+    }
     
-// }
+    @Override
+    public String toString() {
+        return "Nombre: " + name + ", Año de nacimiento: " + birth_year + ", Año de fallecimiento: "
+                + death_year;
+    }
+    
+}

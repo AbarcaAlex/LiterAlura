@@ -2,21 +2,31 @@ package com.alura.literalura.principal;
 
 import java.util.List;
 import java.util.Scanner;
-// import java.util.stream.Collectors;
+import java.util.stream.Collectors;
 
+import com.alura.literalura.model.Autor;
 import com.alura.literalura.model.DatosBusqueda;
 import com.alura.literalura.model.DatosLibro;
-// import com.alura.literalura.model.Libro;
+import com.alura.literalura.model.Libro;
+import com.alura.literalura.repository.AutorRepository;
+import com.alura.literalura.repository.LibroRepository;
 import com.alura.literalura.service.ConsumoApi;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class Principal {
-    private static Scanner scanner = new Scanner(System.in);
-    private static ObjectMapper objectMapper = new ObjectMapper();
+public class Principal{
+    private Scanner scanner = new Scanner(System.in);
+    private ObjectMapper objectMapper = new ObjectMapper();
+    private LibroRepository libroRepo;
+    private AutorRepository autorRepo;
 
-    public static int mostrarMenu(){
+    public Principal(LibroRepository libroRepository, AutorRepository autorRepository){
+        this.libroRepo = libroRepository;
+        this.autorRepo = autorRepository;
+    }
+
+    public int mostrarMenu(){
         
         int menu=0;
         
@@ -48,7 +58,7 @@ public class Principal {
         return menu;
     }
 
-    public static void lanzarAplicacion() throws JsonMappingException, JsonProcessingException{
+    public void lanzarAplicacion() throws JsonMappingException, JsonProcessingException{
         int salir = 1;
         int opcionMenu;
 
@@ -82,7 +92,7 @@ public class Principal {
         }
     }
 
-    public static void buscarLibroPorTitulo() throws JsonMappingException, JsonProcessingException{
+    public void buscarLibroPorTitulo() throws JsonMappingException, JsonProcessingException{
         
         System.out.println("Escriba el titulo del libro que desea buscar:");
         String titulo = scanner.next();
@@ -92,15 +102,20 @@ public class Principal {
 
         DatosBusqueda data = objectMapper.readValue(json, DatosBusqueda.class);
 
-        List<DatosLibro> libros = data.resultados();
-        if (libros.isEmpty()) {
-            System.out.println("No se encontro ningun libro");
+        if (data.numResultados() == 0) {
+            System.out.println("No se encontro ningun libro con ese titulo");
         }else{
-            libros.stream()
-                .limit(1)
-                // .map(l -> new Libro(l))
-                // .collect(Collectors.toList())
-                .forEach(System.out::println);
+            DatosLibro libro = data.resultados().getFirst();
+            
+            Libro libroAGuardar = new Libro(libro);
+            List<Autor> autoresAGuardar = libro.autores().stream().map(a -> new Autor(a)).collect(Collectors.toList());
+
+            libroAGuardar.setAuthors(autoresAGuardar);
+            autoresAGuardar.stream().forEach(a -> a.setLibro(libroAGuardar));
+
+            System.out.println("Mostrando el resultado de la busqueda:\n"+libroAGuardar);
+            libroRepo.save(libroAGuardar);
+            autorRepo.saveAll(autoresAGuardar);
         }
         
     }
