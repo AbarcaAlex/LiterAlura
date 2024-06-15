@@ -18,6 +18,7 @@ public class ConsumoApi {
         } catch (Exception e) {
             System.out.println("Ocurrio un problema al conectar con la api");
         }
+        @SuppressWarnings("null")
         String json = response.body();
         return json;
     }

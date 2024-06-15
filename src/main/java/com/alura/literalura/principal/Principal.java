@@ -77,10 +77,10 @@ public class Principal{
                     mostrarLibrosRegistrados();
                     break;
                 case 3:
-    
+                    mostrarAutoresRegistrados();
                     break;
                 case 4:
-    
+                    mostrarAutoresVivosEnCiertoAnio();
                     break;
                 case 5:
     
@@ -92,9 +92,26 @@ public class Principal{
         }
     }
 
+    private void mostrarAutoresVivosEnCiertoAnio() {
+        try {
+            System.out.println("Escriba el año: ");
+            int anio = scanner.nextInt();
+            var autores = autorRepo.autoresVivosEnCiertoAnio(anio);
+            System.out.println(autores);
+        } catch (Exception e) {
+            System.out.println("La fecha no es valida!");
+        }
+        
+    }
+
+    private void mostrarAutoresRegistrados() {
+        var autores = autorRepo.mostrarAutores();
+        System.out.println(autores);
+    }
+
     private void mostrarLibrosRegistrados() {
         var libros = libroRepo.mostrarLibros();
-        libros.stream().forEach(l -> l.setAuthors(autorRepo.mostrarAutores(l.getId())));
+        libros.stream().forEach(l -> l.setAuthors(autorRepo.mostrarAutoresUsandoIdLibro(l.getId())));
         System.out.println(libros);
     }
 

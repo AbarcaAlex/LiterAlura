@@ -83,7 +83,7 @@ public class Autor {
     @Override
     public String toString() {
         return "Nombre: " + name + ", Año de nacimiento: " + birth_year + ", Año de fallecimiento: "
-                + death_year;
+                + death_year + "\n";
     }
     
 }
