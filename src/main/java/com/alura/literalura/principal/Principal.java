@@ -74,7 +74,7 @@ public class Principal{
                     buscarLibroPorTitulo();
                     break;
                 case 2:
-    
+                    mostrarLibrosRegistrados();
                     break;
                 case 3:
     
@@ -92,6 +92,12 @@ public class Principal{
         }
     }
 
+    private void mostrarLibrosRegistrados() {
+        var libros = libroRepo.mostrarLibros();
+        libros.stream().forEach(l -> l.setAuthors(autorRepo.mostrarAutores(l.getId())));
+        System.out.println(libros);
+    }
+
     public void buscarLibroPorTitulo() throws JsonMappingException, JsonProcessingException{
         
         System.out.println("Escriba el titulo del libro que desea buscar:");
@@ -107,18 +113,24 @@ public class Principal{
         }else{
             DatosLibro libro = data.resultados().getFirst();
             
-            Libro libroAGuardar = new Libro(libro);
-            List<Autor> autoresAGuardar = libro.autores().stream().map(a -> new Autor(a)).collect(Collectors.toList());
+            var yaExiste = libroRepo.buscarSiYaExisteElLibro(libro.id());
+            
+            if (yaExiste.isEmpty()) {
+                Libro libroAGuardar = new Libro(libro);
+                List<Autor> autoresAGuardar = libro.autores().stream().map(a -> new Autor(a)).collect(Collectors.toList());
 
-            libroAGuardar.setAuthors(autoresAGuardar);
-            autoresAGuardar.stream().forEach(a -> a.setLibro(libroAGuardar));
+                libroAGuardar.setAuthors(autoresAGuardar);
+                autoresAGuardar.stream().forEach(a -> a.setLibro(libroAGuardar));
 
-            System.out.println("Mostrando el resultado de la busqueda:\n"+libroAGuardar);
-            libroRepo.save(libroAGuardar);
-            autorRepo.saveAll(autoresAGuardar);
+                System.out.println("Mostrando el resultado de la busqueda:\n"+libroAGuardar);
+                libroRepo.save(libroAGuardar);
+                autorRepo.saveAll(autoresAGuardar);
+            }else{
+                System.out.println("El libro ya fue buscado y se encuentra registrado!");
+            }
+            
         }
         
     }
-
     
 }

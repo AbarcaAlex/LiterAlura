@@ -6,8 +6,7 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -17,17 +16,16 @@ import jakarta.persistence.Table;
 public class Libro {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, unique = true)
+    @Column(name = "id_libro", nullable = false, unique = true)
     private long id;
 
     @Column(name = "titulo")
     private String title;
     
-    @OneToMany(mappedBy = "id_author")
+    @OneToMany(mappedBy = "id_author", fetch = FetchType.EAGER)
     private List<Autor> authors;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "idioma_libro")
     @Column(name = "idioma")
     private List<String> languages;
@@ -38,6 +36,7 @@ public class Libro {
     public Libro(){}
 
     public Libro(DatosLibro dl){
+        this.id = dl.id();
         this.title = dl.titulo();
         this.languages = dl.idiomas();
         this.download_count = dl.descargas();
