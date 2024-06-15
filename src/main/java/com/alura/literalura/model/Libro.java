@@ -2,9 +2,7 @@ package com.alura.literalura.model;
 
 import java.util.List;
 
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -25,10 +23,8 @@ public class Libro {
     @OneToMany(mappedBy = "id_author", fetch = FetchType.EAGER)
     private List<Autor> authors;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "idioma_libro")
     @Column(name = "idioma")
-    private List<String> languages;
+    private String language;
 
     @Column(name = "descargas")
     private int download_count;
@@ -38,7 +34,7 @@ public class Libro {
     public Libro(DatosLibro dl){
         this.id = dl.id();
         this.title = dl.titulo();
-        this.languages = dl.idiomas();
+        this.language = dl.idiomas().getFirst();
         this.download_count = dl.descargas();
     }
 
@@ -67,12 +63,12 @@ public class Libro {
         this.authors = authors;
     }
 
-    public List<String> getLanguages() {
-        return languages;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
+    public void setLanguage(List<String> languages) {
+        this.language = languages.getFirst();
     }
 
     public int getDownload_count() {
@@ -85,7 +81,7 @@ public class Libro {
 
     @Override
     public String toString() {
-        return "\nTitulo: " + title + "\nAutores=" + authors + "\nLenguajes: " + languages
+        return "\nTitulo: " + title + "\nAutores=" + authors + "\nIdioma: " + language
                 + "\nDescargas: " + download_count + "\n";
     }
 

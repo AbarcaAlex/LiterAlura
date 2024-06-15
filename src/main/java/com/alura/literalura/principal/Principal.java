@@ -83,7 +83,7 @@ public class Principal{
                     mostrarAutoresVivosEnCiertoAnio();
                     break;
                 case 5:
-    
+                    mostrarLibrosEnCiertoIdioma();
                     break;
                 default:
                     System.out.println("Ocurrio un error inesperado!");
@@ -92,12 +92,35 @@ public class Principal{
         }
     }
 
+    private void mostrarLibrosEnCiertoIdioma() {
+        System.out.printf("""
+            Escriba las iniciales del idioma a buscar:
+            en - ingles
+            es - español
+            fr - frances
+            fi - finlandes
+            pt - portugues
+            """);
+        String idioma = scanner.next().toLowerCase();
+        var libros = libroRepo.librosEnCiertoIdioma(idioma);
+        if(libros.isEmpty()){
+            System.out.println("No se encontraron libros en ese idioma");
+        }else{
+            libros.stream().forEach(l -> l.setAuthors(autorRepo.mostrarAutoresUsandoIdLibro(l.getId())));
+            System.out.println(libros);
+        }
+    }
+
     private void mostrarAutoresVivosEnCiertoAnio() {
         try {
             System.out.println("Escriba el año: ");
             int anio = scanner.nextInt();
             var autores = autorRepo.autoresVivosEnCiertoAnio(anio);
-            System.out.println(autores);
+            if (autores.isEmpty()) {
+                System.out.println("No se encontraron autores vivos durante ese año");
+            }else{
+                System.out.println(autores);
+            }
         } catch (Exception e) {
             System.out.println("La fecha no es valida!");
         }

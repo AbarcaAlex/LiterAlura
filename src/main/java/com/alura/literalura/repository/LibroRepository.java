@@ -15,4 +15,7 @@ public interface LibroRepository extends JpaRepository<Libro,Long>{
 
     @Query(value = "select * from libro", nativeQuery = true)
     List<Libro> mostrarLibros();
+
+    @Query(value = "select * from libro where idioma like ?1", nativeQuery = true)
+    List<Libro> librosEnCiertoIdioma(String idioma);
 }
