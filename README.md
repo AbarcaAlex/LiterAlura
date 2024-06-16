@@ -15,7 +15,7 @@ Programa hecho para correr en consola que permite realizar búsquedas de libros 
 
 `Correr el programa` 
 
-![Menu-screenshot](readme-imgs/screenshot-1.png)
+![menu-screenshot](https://github.com/AbarcaAlex/LiterAlura/assets/146036497/5934f26f-6c22-4d46-b1d8-0a4ec06f7e8f)
 
 `Escriba en la consola el numero de la operación a realizar:`
 
