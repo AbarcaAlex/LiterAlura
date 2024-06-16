@@ -2,6 +2,8 @@ package com.alura.literalura.model;
 
 import java.util.List;
 
+import com.alura.literalura.datos.DatosLibro;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

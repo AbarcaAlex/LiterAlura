@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import com.alura.literalura.datos.DatosBusqueda;
+import com.alura.literalura.datos.DatosLibro;
 import com.alura.literalura.model.Autor;
-import com.alura.literalura.model.DatosBusqueda;
-import com.alura.literalura.model.DatosLibro;
 import com.alura.literalura.model.Libro;
 import com.alura.literalura.repository.AutorRepository;
 import com.alura.literalura.repository.LibroRepository;
@@ -18,44 +18,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Principal{
     private Scanner scanner = new Scanner(System.in);
     private ObjectMapper objectMapper = new ObjectMapper();
-    private LibroRepository libroRepo;
-    private AutorRepository autorRepo;
+    private LibroRepository libroRepository;
+    private AutorRepository autorRepository;
 
     public Principal(LibroRepository libroRepository, AutorRepository autorRepository){
-        this.libroRepo = libroRepository;
-        this.autorRepo = autorRepository;
-    }
-
-    public int mostrarMenu(){
-        
-        int menu=0;
-        
-        while (true) {
-
-            System.out.printf("""
-            ----------------------
-            Elija la opción a traves de su numero:
-            1 - Buscar libro por titulo
-            2 - Listar libros registrados
-            3 - Listar autores registrados
-            4 - Listar autores vivos en un determinado año
-            5 - Listar libros por idioma
-            0 - Salir
-            """);
-
-            try {
-                menu = scanner.nextInt();
-                if (menu >= 0 && menu <=5) {
-                    break;
-                }else{
-                    System.out.println("\nLa opcion no es valida!\n");
-                }
-            } catch (Exception e) {
-                System.out.println("\nLa opcion no es valida!\n");
-                scanner.next();
-            }
-        }
-        return menu;
+        this.libroRepository = libroRepository;
+        this.autorRepository = autorRepository;
     }
 
     public void lanzarAplicacion() throws JsonMappingException, JsonProcessingException{
@@ -92,6 +60,38 @@ public class Principal{
         }
     }
 
+    private int mostrarMenu(){
+        
+        int menu=0;
+        
+        while (true) {
+
+            System.out.printf("""
+            ----------------------
+            Elija la opción a traves de su numero:
+            1 - Buscar libro por titulo
+            2 - Listar libros registrados
+            3 - Listar autores registrados
+            4 - Listar autores vivos en un determinado año
+            5 - Listar libros por idioma
+            0 - Salir
+            """);
+
+            try {
+                menu = scanner.nextInt();
+                if (menu >= 0 && menu <=5) {
+                    break;
+                }else{
+                    System.out.println("\nLa opcion no es valida!\n");
+                }
+            } catch (Exception e) {
+                System.out.println("\nLa opcion no es valida!\n");
+                scanner.next();
+            }
+        }
+        return menu;
+    }
+
     private void mostrarLibrosEnCiertoIdioma() {
         System.out.printf("""
             Escriba las iniciales del idioma a buscar:
@@ -102,43 +102,22 @@ public class Principal{
             pt - portugues
             """);
         String idioma = scanner.next().toLowerCase();
-        var libros = libroRepo.librosEnCiertoIdioma(idioma);
+        var libros = libroRepository.librosEnCiertoIdioma(idioma);
         if(libros.isEmpty()){
             System.out.println("No se encontraron libros en ese idioma");
         }else{
-            libros.stream().forEach(l -> l.setAuthors(autorRepo.mostrarAutoresUsandoIdLibro(l.getId())));
+            libros.stream().forEach(l -> l.setAuthors(autorRepository.mostrarAutoresUsandoIdLibro(l.getId())));
             System.out.println(libros);
         }
     }
 
-    private void mostrarAutoresVivosEnCiertoAnio() {
-        try {
-            System.out.println("Escriba el año: ");
-            int anio = scanner.nextInt();
-            var autores = autorRepo.autoresVivosEnCiertoAnio(anio);
-            if (autores.isEmpty()) {
-                System.out.println("No se encontraron autores vivos durante ese año");
-            }else{
-                System.out.println(autores);
-            }
-        } catch (Exception e) {
-            System.out.println("La fecha no es valida!");
-        }
-        
-    }
-
-    private void mostrarAutoresRegistrados() {
-        var autores = autorRepo.mostrarAutores();
-        System.out.println(autores);
-    }
-
     private void mostrarLibrosRegistrados() {
-        var libros = libroRepo.mostrarLibros();
-        libros.stream().forEach(l -> l.setAuthors(autorRepo.mostrarAutoresUsandoIdLibro(l.getId())));
+        var libros = libroRepository.mostrarLibros();
+        libros.stream().forEach(l -> l.setAuthors(autorRepository.mostrarAutoresUsandoIdLibro(l.getId())));
         System.out.println(libros);
     }
 
-    public void buscarLibroPorTitulo() throws JsonMappingException, JsonProcessingException{
+    private void buscarLibroPorTitulo() throws JsonMappingException, JsonProcessingException{
         
         System.out.println("Escriba el titulo del libro que desea buscar:");
         String titulo = scanner.next();
@@ -153,7 +132,7 @@ public class Principal{
         }else{
             DatosLibro libro = data.resultados().getFirst();
             
-            var yaExiste = libroRepo.buscarSiYaExisteElLibro(libro.id());
+            var yaExiste = libroRepository.buscarSiYaExisteElLibro(libro.id());
             
             if (yaExiste.isEmpty()) {
                 Libro libroAGuardar = new Libro(libro);
@@ -163,14 +142,35 @@ public class Principal{
                 autoresAGuardar.stream().forEach(a -> a.setLibro(libroAGuardar));
 
                 System.out.println("Mostrando el resultado de la busqueda:\n"+libroAGuardar);
-                libroRepo.save(libroAGuardar);
-                autorRepo.saveAll(autoresAGuardar);
+                libroRepository.save(libroAGuardar);
+                autorRepository.saveAll(autoresAGuardar);
             }else{
                 System.out.println("El libro ya fue buscado y se encuentra registrado!");
             }
             
         }
         
+    }
+
+    private void mostrarAutoresVivosEnCiertoAnio() {
+        try {
+            System.out.println("Escriba el año: ");
+            int anio = scanner.nextInt();
+            var autores = autorRepository.autoresVivosEnCiertoAnio(anio);
+            if (autores.isEmpty()) {
+                System.out.println("No se encontraron autores vivos durante ese año");
+            }else{
+                System.out.println(autores);
+            }
+        } catch (Exception e) {
+            System.out.println("La fecha no es valida!");
+        }
+        
+    }
+
+    private void mostrarAutoresRegistrados() {
+        var autores = autorRepository.mostrarAutores();
+        System.out.println(autores);
     }
     
 }

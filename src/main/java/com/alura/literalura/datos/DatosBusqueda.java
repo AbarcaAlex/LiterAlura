@@ -1,4 +1,4 @@
-package com.alura.literalura.model;
+package com.alura.literalura.datos;
 
 import java.util.List;
 

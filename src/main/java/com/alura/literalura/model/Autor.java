@@ -1,5 +1,7 @@
 package com.alura.literalura.model;
 
+import com.alura.literalura.datos.DatosAutor;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
